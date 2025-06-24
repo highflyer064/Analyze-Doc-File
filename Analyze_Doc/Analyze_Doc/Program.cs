@@ -1,30 +1,21 @@
-﻿using Microsoft.Office.Interop.Word;
-using System;
-using System.Reflection.Metadata;
-using static System.Net.Mime.MediaTypeNames;
-using Word = Microsoft.Office.Interop.Word;
+﻿using System;
+using System.IO;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 class Program
 {
     static void Main()
     {
-        Word.Application word = new Word.Application();
-        Word.Document doc = null;
+        string filepath = @"E:\1.docx";
 
-        try
+        using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filepath, false))
         {
-            object filePath = @"E:\11.doc";
-            object readOnly = true;
-            object missing = System.Reflection.Missing.Value;
+            Body body = wordDoc.MainDocumentPart.Document.Body;
+            string text = body.InnerText;
 
-            doc = word.Documents.Open(ref filePath, ReadOnly: ref readOnly, Visible: false);
-            string text = doc.Content.Text;
+            Console.WriteLine("==========Document Text===========");
             Console.WriteLine(text);
-        }
-        finally
-        {
-            if (doc != null) doc.Close();
-            word.Quit();
         }
     }
 }
